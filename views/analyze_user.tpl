@@ -19,5 +19,13 @@
     <p><button id="check_user">ユーザのチェック</button></p>
     <div id="error_message" class="error"></div>
     <div id="termTagCloud" style="width: 100%; height: 480px;"></div>
+    <table class="normal">
+      <thead>
+        <th>単語</th>
+        <th>出現数</th>
+      </thead>
+      <tbody id="tblTerms">
+      </tbody>
+    </table>
 </body>
 </html>

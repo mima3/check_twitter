@@ -55,7 +55,7 @@ def analyzeUserJson(user):
         # ログインしていない場合は、エラー
         abort(500, "Twitter Error.")
     tw = TwitterAnalyzer(api)
-    data = tw.Analyze(user)
+    data = tw.Analyze(user, 300)
     response.content_type = 'application/json;charset=utf-8'
     res = {'data' : data}
     return json.dumps(res)

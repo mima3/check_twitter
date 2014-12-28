@@ -15,7 +15,18 @@ $(function() {
             $('#error_message').append(errCode)
             return;
           }
+          $('#termTagCloud').empty();
           $('#termTagCloud').jQCloud(result.data);
+
+          // テーブルの作成
+          var tbl = $('#tblTerms');
+          tbl.empty();
+          for (var i = 0; i < result.data.length; ++i ) {
+            var tr = $('<tr/>');
+            $('<td>' + result.data[i].text + '</td>').appendTo(tr);
+            $('<td>' + result.data[i].weight + '</td>').appendTo(tr);
+            tr.appendTo(tbl);
+          }
           //$('#termTagCloud').jQCloud(result);
           //$('#termsTable').addRowData('1' , result);
         },
