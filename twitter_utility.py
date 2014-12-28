@@ -40,7 +40,7 @@ class TwitterUtility:
     
     return self.access_token
 
-  def get_api(self,request_token,access_token):
+  def get_api(self, request_token, access_token):
     if self.api is None:
       self.request_token = request_token
       self.access_token = access_token

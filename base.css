@@ -37,6 +37,10 @@ body {
 	margin-bottom: 10px;
 }
 
+.error {
+    color: #ff0000;
+    font-weight:bold;
+}
 
 h1 {
     text-align: center;
