@@ -10,8 +10,9 @@
     %if access_token:
       <p>Hello {{access_token['screen_name']}}</p>
     %end
-    <p><a href="/check_twitter/login">ログイン</a></p>
-    <p><a href="/check_twitter/logout">ログアウト</a></p>
+    <p><a href="/check_twitter/login">ログイン</a>　<a href="/check_twitter/logout">ログアウト</a></p>
+    <p><a href="/check_twitter/analyze_user">ツイッターユーザの解析</a></p>
+    <p>指定のユーザがよくつぶやく単語を抽出します。</p>
   </div>
 </body>
 </html>
