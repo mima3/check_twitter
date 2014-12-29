@@ -19,8 +19,27 @@ class TwitterAnalyzer:
         self.wordcount = defaultdict(int)
 
 
-    def Analyze(self, user, count):
+    def AnalyzeUser(self, user, count):
         statuses = self.api.GetUserTimeline(screen_name=user, count=200, trim_user=True)
+        self.wordcount = defaultdict(int)
+        for s in statuses:
+            self.morph( s.text.encode('utf-8') )
+        ret = []
+        i = 0
+        for k, v in sorted(self.wordcount.items(), key=lambda x:x[1], reverse=True):
+            if i >= count:
+                break
+            word = k
+            word = word.replace("\"","")
+            word = word.replace("\'","")
+            word = word.replace("\\","\\\\")
+            ret.append( {"text":word ,"weight":v} )
+            i += 1
+        return ret
+
+
+    def AnalyzeSearch(self, keyword, count):
+        statuses = self.api.GetSearch(term=keyword, count=200)
         self.wordcount = defaultdict(int)
         for s in statuses:
             self.morph( s.text.encode('utf-8') )

@@ -33,7 +33,7 @@ def homePage():
 
 
 @app.get('/analyze_user')
-def homePage():
+def analyzeUser():
     session = request.environ.get('beaker.session')
     session['redirect_url'] = '/check_twitter/analyze_user'
     access_token = None
@@ -64,9 +64,54 @@ def analyzeUserJson(user):
         return json.dumps(res)
     try:
         tw = TwitterAnalyzer(api)
-        data = tw.Analyze(user, 300)
+        data = tw.AnalyzeUser(user, 300)
         res['data'] = data
         res['user'] = api.GetUser(screen_name=user).AsDict()
+        return json.dumps(res)
+    except twitter.TwitterError, ex:
+        res['result'] = 3
+        for item in ex:
+            for e in item:
+                res['error'] = e['message']
+        return json.dumps(res)
+
+
+
+@app.get('/analyze_search')
+def analyzeSearch():
+    session = request.environ.get('beaker.session')
+    session['redirect_url'] = '/check_twitter/analyze_search'
+    access_token = None
+    session.save()
+    if not 'access_token' in session:
+        # ログインしていない場合は、ログインページにリダイレクト
+        redirect('/check_twitter/login')
+        return
+    access_token = session['access_token']
+    return template('analyze_search', access_token=access_token).replace('\n', '');
+
+
+@app.get('/json/analyze_search')
+def analyzeSearchJson():
+    keyword = request.query.keyword
+    res = {'data' : None, 'result':0, 'error': ''}
+    response.content_type = 'application/json;charset=utf-8'
+    session = request.environ.get('beaker.session')
+    if not 'access_token' in session or not 'request_token' in session:
+        # ログインしていない場合は、エラー
+        res['result'] = 1
+        res['error'] = 'ログインされていません。'
+        return json.dumps(res)
+    api = twitter_util.get_api(session['request_token'], session['access_token'])
+    if not api:
+        # ログインしていない場合は、エラー
+        res['result'] = 2
+        res['error'] = 'Twitter APIの取得に失敗しました。'
+        return json.dumps(res)
+    try:
+        tw = TwitterAnalyzer(api)
+        data = tw.AnalyzeSearch(keyword, 300)
+        res['data'] = data
         return json.dumps(res)
     except twitter.TwitterError, ex:
         res['result'] = 3

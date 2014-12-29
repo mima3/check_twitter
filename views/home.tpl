@@ -13,6 +13,8 @@
     <p><a href="/check_twitter/login">ログイン</a>　<a href="/check_twitter/logout">ログアウト</a></p>
     <p><a href="/check_twitter/analyze_user">ツイッターユーザの解析</a></p>
     <p>指定のユーザがよくつぶやく単語を抽出します。</p>
+    <p><a href="/check_twitter/analyze_search">ツイッター検索結果の解析</a></p>
+    <p>指定のキーワードの検索結果を含むツイートに含まれる単語を抽出します。</p>
   </div>
 </body>
 </html>
