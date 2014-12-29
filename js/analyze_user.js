@@ -8,11 +8,13 @@ $(function() {
       util.getJson(
         '/check_twitter/json/analyze_user/' + user,
         {},
-        function (errCode, result) {
-          console.log(errCode);
-          console.log(result);
-          if (errCode) {
-            $('#error_message').append(errCode)
+        function (err, result) {
+          if (err) {
+            $('#error_message').append(err)
+            return;
+          }
+          if (result.result) {
+            $('#error_message').append(result.error)
             return;
           }
           $('#termTagCloud').empty();

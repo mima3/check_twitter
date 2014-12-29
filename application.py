@@ -1,11 +1,12 @@
 # coding=utf-8
 from bottle import get, post, template, request, Bottle, response, redirect, abort
 from json import dumps
-from twitter_utility import TwitterUtility
 import os
 import json
 from collections import defaultdict
+from twitter_utility import TwitterUtility
 from twitter_analyze import TwitterAnalyzer
+import twitter
 
 app = Bottle()
 twitter_util = None
@@ -46,19 +47,31 @@ def homePage():
 
 @app.get('/json/analyze_user/<user>')
 def analyzeUserJson(user):
+    res = {'data' : None, 'result':0, 'error': ''}
+    response.content_type = 'application/json;charset=utf-8'
     session = request.environ.get('beaker.session')
     if not 'access_token' in session or not 'request_token' in session:
         # ログインしていない場合は、エラー
-        abort(401, "Sorry, access denied.")
+        res['result'] = 1
+        res['error'] = 'ログインされていません。'
+        return json.dumps(res)
     api = twitter_util.get_api(session['request_token'], session['access_token'])
     if not api:
         # ログインしていない場合は、エラー
-        abort(500, "Twitter Error.")
-    tw = TwitterAnalyzer(api)
-    data = tw.Analyze(user, 300)
-    response.content_type = 'application/json;charset=utf-8'
-    res = {'data' : data}
-    return json.dumps(res)
+        res['result'] = 2
+        res['error'] = 'Twitter APIの取得に失敗しました。'
+        return json.dumps(res)
+    try:
+        tw = TwitterAnalyzer(api)
+        data = tw.Analyze(user, 300)
+        res['data'] = data
+        return json.dumps(res)
+    except twitter.TwitterError, ex:
+        res['result'] = 3
+        for item in ex:
+            for e in item:
+                res['error'] = e['message']
+        return json.dumps(res)
 
 
 ###########################################
