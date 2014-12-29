@@ -99,3 +99,34 @@ table.normal  td{
     border-bottom:1px solid #663300;
     padding:0.3em 1em;
 }
+
+/**
+ * êÅÇ´èoÇµ
+ */
+/* balloon-3 top-left */
+.balloon-3-top-left {
+	position: relative;
+	display: inline-block;
+	padding: 0 15px;
+	width: auto;
+	min-width: 115px;
+	min-height: 40px;
+	color: #F6F6F6;
+	line-height: 40px;
+	text-align: left;
+	background: #19283C;
+	z-index: 0;
+}
+.balloon-3-top-left:after {
+	content: "";
+	position: absolute;
+	top: -15px; left: 0;
+	margin-left: 0;
+	display: block;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-width: 0 0 15px 20px;
+	border-color: transparent transparent #19283C transparent;
+	z-index: -1;
+}

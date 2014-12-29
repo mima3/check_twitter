@@ -18,6 +18,7 @@
     <p>ユーザ名：<input id="user_name" type="text" name="name" size="30" maxlength="20"></input></p>
     <p><button id="check_user">ユーザのチェック</button></p>
     <div id="error_message" class="error"></div>
+    <div id="user_info"></div>
     <div id="termTagCloud" style="width: 100%; height: 480px;"></div>
     <table class="normal">
       <thead>

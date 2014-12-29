@@ -17,9 +17,16 @@ $(function() {
             $('#error_message').append(result.error)
             return;
           }
+          $('#user_info').empty();
+          $('#user_info').append('<p><img src="' + result.user.profile_image_url + '"/></p>');
+          var desc = result.user.description;
+          desc = desc.replace(/[\n]/g, "<br />");
+          $('#user_info').append('<div class="balloon-3-top-left">' + desc + '</div>');
+
+          // タグクラウド作成
           $('#termTagCloud').empty();
           $('#termTagCloud').jQCloud(result.data);
-
+          
           // テーブルの作成
           var tbl = $('#tblTerms');
           tbl.empty();

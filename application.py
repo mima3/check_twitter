@@ -45,6 +45,7 @@ def homePage():
     access_token = session['access_token']
     return template('analyze_user', access_token=access_token).replace('\n', '');
 
+
 @app.get('/json/analyze_user/<user>')
 def analyzeUserJson(user):
     res = {'data' : None, 'result':0, 'error': ''}
@@ -65,6 +66,7 @@ def analyzeUserJson(user):
         tw = TwitterAnalyzer(api)
         data = tw.Analyze(user, 300)
         res['data'] = data
+        res['user'] = api.GetUser(screen_name=user).AsDict()
         return json.dumps(res)
     except twitter.TwitterError, ex:
         res['result'] = 3
