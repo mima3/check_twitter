@@ -15,6 +15,8 @@
     <p>指定のユーザがよくつぶやく単語を抽出します。</p>
     <p><a href="/check_twitter/analyze_search">ツイッター検索結果の解析</a></p>
     <p>指定のキーワードの検索結果を含むツイートに含まれる単語を抽出します。</p>
+    <p><a href="/check_twitter/analyze_locate">ツイッター位置情報の解析</a></p>
+    <p>指定の位置情報を含むツイートに含まれる単語を抽出します。</p>
   </div>
 </body>
 </html>

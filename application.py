@@ -56,13 +56,13 @@ def analyzeUserJson(user):
         res['result'] = 1
         res['error'] = 'ログインされていません。'
         return json.dumps(res)
-    api = twitter_util.get_api(session['request_token'], session['access_token'])
-    if not api:
-        # ログインしていない場合は、エラー
-        res['result'] = 2
-        res['error'] = 'Twitter APIの取得に失敗しました。'
-        return json.dumps(res)
     try:
+        api = twitter_util.get_api(session['request_token'], session['access_token'])
+        if not api:
+            # ログインしていない場合は、エラー
+            res['result'] = 2
+            res['error'] = 'Twitter APIの取得に失敗しました。'
+            return json.dumps(res)
         tw = TwitterAnalyzer(api)
         data = tw.AnalyzeUser(user, 300)
         res['data'] = data
@@ -102,15 +102,15 @@ def analyzeSearchJson():
         res['result'] = 1
         res['error'] = 'ログインされていません。'
         return json.dumps(res)
-    api = twitter_util.get_api(session['request_token'], session['access_token'])
-    if not api:
-        # ログインしていない場合は、エラー
-        res['result'] = 2
-        res['error'] = 'Twitter APIの取得に失敗しました。'
-        return json.dumps(res)
     try:
+        api = twitter_util.get_api(session['request_token'], session['access_token'])
+        if not api:
+            # ログインしていない場合は、エラー
+            res['result'] = 2
+            res['error'] = 'Twitter APIの取得に失敗しました。'
+            return json.dumps(res)
         tw = TwitterAnalyzer(api)
-        data = tw.AnalyzeSearch(keyword, 300)
+        data, statuses = tw.AnalyzeSearch(keyword=keyword, count=300)
         res['data'] = data
         return json.dumps(res)
     except twitter.TwitterError, ex:
@@ -121,6 +121,54 @@ def analyzeSearchJson():
         return json.dumps(res)
 
 
+@app.get('/analyze_locate')
+def analyzeLocate():
+    session = request.environ.get('beaker.session')
+    session['redirect_url'] = '/check_twitter/analyze_locate'
+    access_token = None
+    session.save()
+    if not 'access_token' in session:
+        # ログインしていない場合は、ログインページにリダイレクト
+        redirect('/check_twitter/login')
+        return
+    access_token = session['access_token']
+    return template('analyze_locate', access_token=access_token).replace('\n', '');
+
+
+@app.get('/json/analyze_locate')
+def analyzeLocateJson():
+    lat = request.query.lat
+    lng = request.query.lng
+    radius = request.query.radius
+    geocode = 'geocode:' + str(lat) + ',' + str(lng) + ',' + radius
+    res = {'data' : None, 'result':0, 'error': ''}
+    response.content_type = 'application/json;charset=utf-8'
+    session = request.environ.get('beaker.session')
+    if not 'access_token' in session or not 'request_token' in session:
+        # ログインしていない場合は、エラー
+        res['result'] = 1
+        res['error'] = 'ログインされていません。'
+        return json.dumps(res)
+    try:
+        api = twitter_util.get_api(session['request_token'], session['access_token'])
+        if not api:
+            # ログインしていない場合は、エラー
+            res['result'] = 2
+            res['error'] = 'Twitter APIの取得に失敗しました。'
+            return json.dumps(res)
+        tw = TwitterAnalyzer(api)
+        data, statuses = tw.AnalyzeSearch(keyword=geocode, count=300)
+        res['data'] = data
+        res['statuses'] = statuses
+        return json.dumps(res)
+    except twitter.TwitterError, ex:
+        res['result'] = 3
+        for item in ex:
+            for e in item:
+                res['error'] = e['message']
+        return json.dumps(res)
+ 
+ 
 ###########################################
 # Twitter関連
 ###########################################

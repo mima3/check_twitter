@@ -38,11 +38,13 @@ class TwitterAnalyzer:
         return ret
 
 
-    def AnalyzeSearch(self, keyword, count):
-        statuses = self.api.GetSearch(term=keyword, count=200)
+    def AnalyzeSearch(self, keyword=None, geocode=None, count=100,):
+        statuses = self.api.GetSearch(term=keyword, geocode=geocode, count=count)
         self.wordcount = defaultdict(int)
+        statuses_list = []
         for s in statuses:
             self.morph( s.text.encode('utf-8') )
+            statuses_list.append(s.AsDict())
         ret = []
         i = 0
         for k, v in sorted(self.wordcount.items(), key=lambda x:x[1], reverse=True):
@@ -54,7 +56,7 @@ class TwitterAnalyzer:
             word = word.replace("\\","\\\\")
             ret.append( {"text":word ,"weight":v} )
             i += 1
-        return ret
+        return ret, statuses_list
 
 
     def morph(self,text):
