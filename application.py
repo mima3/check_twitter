@@ -9,7 +9,7 @@ from twitter_analyze import TwitterAnalyzer
 import twitter
 
 # 桜サーバーの都合で.htaccessでリダイレクトするとSSLにならないので強制する
-os.environ['HTTPS'] = 'on'
+request.environ['wsgi.url_scheme'] = 'https'
 
 app = Bottle()
 twitter_util = None
